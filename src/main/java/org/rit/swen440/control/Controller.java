@@ -265,4 +265,12 @@ public class Controller {
       System.err.println("Failed to write product file for:" + product.getTitle());
     }
   }
+
+  private void writeHistory(Product product) {
+
+  }
+
+  private void loadHistory() {
+    
+  }
 }
