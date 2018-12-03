@@ -33,7 +33,7 @@ public class Product {
 	 * @return true if enough stock
 	 */
 	public boolean canOrder(int amount) {
-		return (itemCount - amount >= 0);
+		return (itemCount - amount >= 0 && amount > 0);
 	}
 
 	/**
