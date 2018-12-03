@@ -24,6 +24,12 @@ public class menumgr
 
     }
 
+    /**
+     * Method looped from menutest until quit.
+     *
+     * @param level
+     * @return
+     */
     public boolean loadLevel(int level)
     {
 //        System.out.println("Loading level:" + currentLevel);
@@ -50,6 +56,9 @@ public class menumgr
         return false;
     }
 
+    /**
+     * Asks user what category of product they would like to access
+     */
     public void Level0()
     {
         menu m = new menu();
@@ -81,6 +90,9 @@ public class menumgr
         }
     }
 
+    /**
+     * Asks user what specific product they would like to purchase from their selected category.
+     */
     public void Level1()
     {
         menu m = new menu();
@@ -127,6 +139,11 @@ public class menumgr
 
     }
 
+    /**
+     * Completes the purchase transaction
+     * @param category
+     * @param item
+     */
     public void OrderQty(String category, String item)
     {
         System.out.println("Please select a quantity");
