@@ -1,16 +1,14 @@
 package org.rit.swen440.dataLayer;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.security.interfaces.RSAKey;
+import java.math.BigDecimal;;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import org.sqlite.JDBC;
 
 public class Repository {
 
