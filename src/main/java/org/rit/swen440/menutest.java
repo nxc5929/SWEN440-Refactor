@@ -8,7 +8,7 @@ import java.io.IOException;
 public class menutest
 {
 	public static void main(String[] args){
-		System.out.println("Hello");
+		System.out.println("Hello and welcome to Hippolyta.com");
 		menumgr mgr = new menumgr();
 		int currentLevel = 0;
 		boolean done = false;

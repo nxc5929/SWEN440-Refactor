@@ -43,9 +43,6 @@ public class menumgr
             case 1:
                 Level1();
                 break;
-            case 2:
-                Level2();
-                break;
             default:
                 System.out.println("Returning to main org.rit.swen440.presentation.menu");
                 currentLevel = 0;
@@ -131,12 +128,6 @@ public class menumgr
             //currentLevel++;//Or keep at same level?
             OrderQty(currentCategoryName, currentItemName);
         }
-    }
-
-
-    public void Level2()
-    {
-
     }
 
     /**
