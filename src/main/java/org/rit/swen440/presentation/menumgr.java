@@ -84,9 +84,6 @@ public class menumgr {
     public void Level1() {
         menu m = new menu();
 
-        //items it = new items("orderSys/" + currentCategory.getName());
-
-        // List<item> itemList = controller.getProducts(currentCategoryName);
         List<String> itemList = controller.getProducts(currentCategoryName);
         List<String> l = new ArrayList<>();
         System.out.println("");

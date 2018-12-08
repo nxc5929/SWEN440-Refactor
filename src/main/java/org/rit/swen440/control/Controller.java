@@ -79,7 +79,14 @@ public class Controller {
 			return productObj.getDescription();
 
 		case COST:
-			return String.valueOf(productObj.getCost());
+			String toReturn = String.valueOf(productObj.getCost());
+			int indexOfDecimalPoint = toReturn.indexOf(".");
+
+			if(indexOfDecimalPoint > -1)
+				while(indexOfDecimalPoint >= toReturn.length()-2) //Add missing decimal places after decimal
+					toReturn += "0";
+
+			return toReturn;
 
 		case INVENTORY:
 			return String.valueOf(productObj.getItemCount());
