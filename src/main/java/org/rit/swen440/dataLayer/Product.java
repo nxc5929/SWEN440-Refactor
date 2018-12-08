@@ -26,6 +26,10 @@ public class Product {
 	private String description;
 	private BigDecimal cost;
 
+	public Product(){
+		itemCount = 0;
+	}
+
 	/**
 	 * Check to see if we have enough of this represented item for an order
 	 *

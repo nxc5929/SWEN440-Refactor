@@ -2,6 +2,7 @@ package org.rit.swen440.presentation;
 
 import org.rit.swen440.control.Controller;
 import org.rit.swen440.dataLayer.Category;
+import org.rit.swen440.dataLayer.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class menumgr {
         }
 
         if (result.equals("q") || iSel < 0 ||
-                iSel >= m.getMenuSize()-1) { //Must add -1 to include the added option 'q to Quit'
+                iSel >= m.getMenuSize() - 1) { //Must add -1 to include the added option 'q to Quit'
             currentLevel--;
         } else {
             currentLevel++;
@@ -99,16 +100,13 @@ public class menumgr {
         try {
             int iSel = Integer.parseInt(result);//Item  selected
             currentItemName = itemList.get(iSel);
-            //currentItem = itemList.get(iSel);
-            //Now read the file and print the org.rit.swen440.presentation.items in the catalog
-            System.out.println("You want item from the catalog: " + currentItemName);
+            System.out.println("You want item from the catalog: \'" + currentItemName + "\'");
         } catch (Exception e) {
             result = "q";
         }
         if (result == "q")
             currentLevel--;
         else {
-            //currentLevel++;//Or keep at same level?
             OrderQty(currentCategoryName, currentItemName);
         }
     }
@@ -120,12 +118,26 @@ public class menumgr {
      * @param item
      */
     public void OrderQty(String category, String item) {
+        String nameOfItem = controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME);
+        String quantityOfItem = controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.INVENTORY);
+        Product prod = new Product();
+        prod.setItemCount(Integer.parseInt(quantityOfItem));
+        System.out.println("\n" + nameOfItem + " availability: " + quantityOfItem);
         System.out.println("Please select a quantity");
-        System.out.println(controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME) +
-                " availability:" + controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.INVENTORY));
         System.out.print(":");
         menu m = new menu();
         String result = m.getSelection();
-        System.out.println("You ordered:" + result);
+
+        int selectedQuantity = -1;
+        try {
+            selectedQuantity = Integer.parseInt(result);
+        } catch (Exception e) {
+            selectedQuantity = -1;
+        }
+        if (prod.order(selectedQuantity)) {
+            System.out.println("You ordered: " + result);
+            //controller.writeProduct()
+        } else
+            System.out.println("Invalid quantity.");
     }
 }
