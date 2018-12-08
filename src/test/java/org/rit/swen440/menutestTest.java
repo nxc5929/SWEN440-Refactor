@@ -8,6 +8,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 import org.rit.swen440.dataLayer.Product;
+import org.rit.swen440.presentation.historyItem;
 
 /**
  * Unit test for menutest Application.
@@ -16,6 +17,7 @@ public class menutestTest
 {
     //Create a new product for testing
 	private Product tester = new Product();
+	private BigDecimal price = new BigDecimal("3.99");
 
 	//Test canOrder with a number that should return true
     @Test
@@ -83,5 +85,17 @@ public class menutestTest
         tester.setItemCount(7);
     	tester.order(9);
     	assertEquals(tester.getItemCount(), 7);
+    }
+
+    //Test to make sure history works correctly
+    @Test
+    public void historyTest()
+    {
+        tester.setItemCount(7);
+        tester.setTitle("Test");
+        tester.setCost(price);
+        tester.setSkuCode(1111);
+        historyItem history = new historyItem(tester.getTitle(), price, 3, tester.getSkuCode());
+        assertEquals("Name: Test, Quantity Purchased: 3, Total Cost: 11.97, SKU Code: 1111", history.getPrintString());
     }
 }
