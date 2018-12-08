@@ -1,6 +1,7 @@
 package org.rit.swen440.control;
 
 import org.rit.swen440.dataLayer.Category;
+import org.rit.swen440.dataLayer.History;
 import org.rit.swen440.dataLayer.Product;
 import org.rit.swen440.dataLayer.Repository;
 
@@ -28,7 +29,8 @@ public class Controller {
 		NAME,
 		DESCRIPTION,
 		COST,
-		INVENTORY
+		INVENTORY,
+		SKU_CODE
 	};
 	
 	private Repository repository;
@@ -65,6 +67,10 @@ public class Controller {
 		return repository.getAllProducts(categoryName);
 	}
 
+	public List<History> getHistoryItems() {
+		return repository.getHistoryItems();
+	}
+
 
 	public String getProductInformation(String category, String product, PRODUCT_FIELD field) {
 		Product productObj = repository.getProductInfo(category, product);
@@ -90,9 +96,18 @@ public class Controller {
 
 		case INVENTORY:
 			return String.valueOf(productObj.getItemCount());
+
+		case SKU_CODE:
+			return String.valueOf(productObj.getSkuCode());
 		}
 
 		return null;
+	}
+
+	public void addHistoryItem(int sku, int quantity, String name, BigDecimal price) {
+		History item = new History(sku, quantity, name, price);
+
+		repository.addHistoryItem(item);
 	}
 
 	/**

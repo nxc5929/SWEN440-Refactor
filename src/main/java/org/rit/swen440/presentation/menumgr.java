@@ -3,7 +3,9 @@ package org.rit.swen440.presentation;
 import org.rit.swen440.control.Controller;
 import org.rit.swen440.dataLayer.Category;
 import org.rit.swen440.dataLayer.Product;
+import org.rit.swen440.dataLayer.History;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +41,9 @@ public class menumgr {
             case 1:
                 Level1();
                 break;
+            case 2:
+                showHistory();
+                break;
             default:
                 System.out.println("Returning to main org.rit.swen440.presentation.menu");
                 currentLevel = 0;
@@ -56,6 +61,7 @@ public class menumgr {
         menu m = new menu();
         List<String> categories = controller.getCategories();
         m.loadMenu(categories);
+        m.addMenuItem("'h' to see history");
         m.addMenuItem("'q' to Quit");
         System.out.println("The following org.rit.swen440.presentation.categories are available");
         m.printMenu();
@@ -64,15 +70,25 @@ public class menumgr {
 
         try {
             result = m.getSelection();
-            iSel = Integer.parseInt(result);
+            if (!result.equals("h")) {
+                iSel = Integer.parseInt(result);
+            }
         } catch (Exception e) {
             result = "q";
         }
 
-        if (result.equals("q") || iSel < 0 ||
+        if (result.equals("h"))
+        {
+            currentLevel = 2;
+
+            System.out.println("\nYour Selection was history");
+        }
+        else if (result.equals("q") || iSel < 0 ||
                 iSel >= m.getMenuSize() - 1) { //Must add -1 to include the added option 'q to Quit'
             currentLevel--;
-        } else {
+        }
+        else
+        {
             currentLevel++;
             currentCategoryName = categories.get(iSel);
             System.out.println("\nYour Selection was:" + currentCategoryName);
@@ -137,7 +153,37 @@ public class menumgr {
         if (prod.order(selectedQuantity)) {
             System.out.println("You ordered: " + result);
             //controller.writeProduct()
+            controller.addHistoryItem(Integer.parseInt(controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.SKU_CODE)),
+                    Integer.parseInt(result),
+                    controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME),
+                    new BigDecimal(controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.COST)));
         } else
+
             System.out.println("Invalid quantity.");
+    }
+
+    public void showHistory() {
+        menu m = new menu();
+
+        List<History> history = controller.getHistoryItems();
+        List<String> historyStrings = new ArrayList<>();
+        for (History temp : history) {
+            historyItem item = new historyItem(temp.getName(), temp.getPrice(), temp.getQuantity(), temp.getSkuCode());
+            historyStrings.add(item.getPrintString());
+        }
+
+        m.loadMenu(historyStrings);
+        m.addMenuItem("'q' to quit");
+        m.printMenu();
+        String result = m.getSelection();
+        try {
+            result = "q";
+        } catch (Exception e) {
+            result = "q";
+        }
+        if (result == "q") {
+            currentLevel=0;
+        }
+
     }
 }
