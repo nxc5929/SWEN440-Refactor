@@ -110,13 +110,7 @@ public class Controller {
 		repository.addHistoryItem(item);
 	}
 
-	/**
-	 * Loop through all our categories and write any product records that
-	 * have been updated.
-	 */
-	public void writeCategories() {
-//		for (Category category: categories) {
-//			writeProducts(category.getProducts());
-//		}
+	public void writeProduct(Product prod) {
+		repository.updateProductCount(prod.getTitle(), prod.getItemCount());
 	}
 }

@@ -105,9 +105,10 @@ public class Repository {
 		return product;
 	}
 	
-	public void updateProductCount(String category, String productName, int count){
+	public void updateProductCount(String productName, int count){
+		System.out.println(productName + ": " + count);
 		try {
-			query.executeUpdate("UPDATE product p SET itemCount = " + count + " JOIN category c ON c.id = p.productId AND c.name = '" + category +"' AND p.title = '" + productName + "'");
+			query.executeUpdate("UPDATE product SET itemCount = " + count + " WHERE title = '" + productName + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -137,6 +137,7 @@ public class menumgr {
         String nameOfItem = controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME);
         String quantityOfItem = controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.INVENTORY);
         Product prod = new Product();
+        prod.setTitle(nameOfItem);
         prod.setItemCount(Integer.parseInt(quantityOfItem));
         System.out.println("\n" + nameOfItem + " availability: " + quantityOfItem);
         System.out.println("Please select a quantity");
@@ -152,7 +153,7 @@ public class menumgr {
         }
         if (prod.order(selectedQuantity)) {
             System.out.println("You ordered: " + result);
-            //controller.writeProduct()
+            controller.writeProduct(prod);
             controller.addHistoryItem(Integer.parseInt(controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.SKU_CODE)),
                     Integer.parseInt(result),
                     controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME),
