@@ -1,6 +1,6 @@
 package org.rit.swen440.dataLayer;
 
-import java.math.BigDecimal;;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -100,6 +100,14 @@ public class Repository {
 			e.printStackTrace();
 		}
 		return product;
+	}
+	
+	public void updateProductCount(String category, String productName, int count){
+		try {
+			query.executeUpdate("UPDATE product p SET itemCount = " + count + " JOIN category c ON c.id = p.productId AND c.name = '" + category +"' AND p.title = '" + productName + "'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
