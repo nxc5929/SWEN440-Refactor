@@ -32,7 +32,9 @@ public class Repository {
 			query.executeUpdate("create table category (id integer, name string, desc string)");
 			query.executeUpdate("drop table if exists product");
 			query.executeUpdate("create table product (id integer, productId integer, skuCode integer, itemCount integer, title string, desc string, cost string)");
-			
+			query.executeUpdate("drop table if exists history");
+			query.executeUpdate("create table history (skuCode integer, name string, price string, quantity int)");
+
 			query.executeUpdate("insert into category values(1, 'food', 'edible yummy food items')");
 			query.executeUpdate("insert into product values(1, 1, 1111, 75, 'apples', 'red/green circle that grows on trees', '2.57')");
 			query.executeUpdate("insert into product values(2, 1, 1222, 15, 'bananas', 'yellow fruit that grows on trees', '2.10')");
@@ -95,6 +97,7 @@ public class Repository {
 			    product.setDescription(rs.getString("desc"));
 			    product.setCost(new BigDecimal(rs.getString("cost")));
 			    product.setItemCount(rs.getInt("itemCount"));
+			    product.setSkuCode(rs.getInt("skuCode"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -107,6 +110,35 @@ public class Repository {
 			query.executeUpdate("UPDATE product p SET itemCount = " + count + " JOIN category c ON c.id = p.productId AND c.name = '" + category +"' AND p.title = '" + productName + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public List<History> getHistoryItems() {
+		List<History> list = new ArrayList<>();
+		try {
+			ResultSet rs = query.executeQuery("SELECT * FROM history");
+			while (rs.next()) {
+				list.add(new History(rs.getInt("skuCode"), rs.getInt("quantity"),
+						rs.getString("name"), new BigDecimal(rs.getString("price"))));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	public void addHistoryItem(History item) {
+		try {
+			int sku = item.getSkuCode();
+			String name = item.getName();
+			BigDecimal price = item.getPrice();
+			int quantity = item.getQuantity();
+
+			query.executeUpdate("insert into history values(" + sku + ", '" + name + "', " + price + ", " + quantity + ")");
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.err.print("Adding history item failed");
 		}
 	}
 

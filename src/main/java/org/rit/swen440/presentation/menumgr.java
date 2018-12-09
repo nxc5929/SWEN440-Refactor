@@ -2,15 +2,17 @@ package org.rit.swen440.presentation;
 
 import org.rit.swen440.control.Controller;
 import org.rit.swen440.dataLayer.Category;
+import org.rit.swen440.dataLayer.Product;
+import org.rit.swen440.dataLayer.History;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 
-public class menumgr
-{
+public class menumgr {
     int currentLevel = 0;
     String currentCategoryName;
     String currentItemName;
@@ -18,17 +20,19 @@ public class menumgr
     item currentItem;
     private Controller controller;
 
-    public menumgr()
-    {
+    public menumgr() {
         controller = new Controller();
 
     }
 
-    public boolean loadLevel(int level)
-    {
-//        System.out.println("Loading level:" + currentLevel);
-        switch (currentLevel)
-        {
+    /**
+     * Method looped from menutest until quit.
+     *
+     * @param level
+     * @return
+     */
+    public boolean loadLevel(int level) {
+        switch (currentLevel) {
             case -1:
                 return true;
             case 0:
@@ -38,7 +42,7 @@ public class menumgr
                 Level1();
                 break;
             case 2:
-                Level2();
+                showHistory();
                 break;
             default:
                 System.out.println("Returning to main org.rit.swen440.presentation.menu");
@@ -50,91 +54,136 @@ public class menumgr
         return false;
     }
 
-    public void Level0()
-    {
+    /**
+     * Asks user what category of product they would like to access
+     */
+    public void Level0() {
         menu m = new menu();
         List<String> categories = controller.getCategories();
         m.loadMenu(categories);
-        m.addMenuItem("'q' to Quit"); 
+        m.addMenuItem("'h' to see history");
+        m.addMenuItem("'q' to Quit");
         System.out.println("The following org.rit.swen440.presentation.categories are available");
         m.printMenu();
-        String result = "0";
-        try
-        {
+        String result = "q";
+        int iSel = -1;
+
+        try {
             result = m.getSelection();
-        }
-        catch (Exception e)
-        {
+            if (!result.equals("h")) {
+                iSel = Integer.parseInt(result);
+            }
+        } catch (Exception e) {
             result = "q";
         }
-        if (Objects.equals(result,"q"))
+
+        if (result.equals("h"))
         {
+            currentLevel = 2;
+
+            System.out.println("\nYour Selection was history");
+        }
+        else if (result.equals("q") || iSel < 0 ||
+                iSel >= m.getMenuSize() - 1) { //Must add -1 to include the added option 'q to Quit'
             currentLevel--;
         }
         else
         {
             currentLevel++;
-            int iSel = Integer.parseInt(result);
-
             currentCategoryName = categories.get(iSel);
             System.out.println("\nYour Selection was:" + currentCategoryName);
         }
     }
 
-    public void Level1()
-    {
+    /**
+     * Asks user what specific product they would like to purchase from their selected category.
+     */
+    public void Level1() {
         menu m = new menu();
 
-        //items it = new items("orderSys/" + currentCategory.getName());
-
-        // List<item> itemList = controller.getProducts(currentCategoryName);
         List<String> itemList = controller.getProducts(currentCategoryName);
         List<String> l = new ArrayList<>();
         System.out.println("");
-        for (String itm: itemList)
+        for (String itm : itemList)
             l.add(controller.getProductInformation(currentCategoryName, itm, Controller.PRODUCT_FIELD.NAME)
-             + "($" + controller.getProductInformation(currentCategoryName, itm, Controller.PRODUCT_FIELD.COST) + ")");
-        
+                    + "($" + controller.getProductInformation(currentCategoryName, itm, Controller.PRODUCT_FIELD.COST) + ")");
+
         m.loadMenu(l);
         m.addMenuItem("'q' to quit");
         System.out.println("The following items are available");
         m.printMenu();
         String result = m.getSelection();
-        try
-        {
+        try {
             int iSel = Integer.parseInt(result);//Item  selected
             currentItemName = itemList.get(iSel);
-            //currentItem = itemList.get(iSel);
-            //Now read the file and print the org.rit.swen440.presentation.items in the catalog
-            System.out.println("You want item from the catalog: " + currentItemName);
-        }
-        catch (Exception e)
-        {
+            System.out.println("You want item from the catalog: \'" + currentItemName + "\'");
+        } catch (Exception e) {
             result = "q";
         }
         if (result == "q")
             currentLevel--;
-        else
-        {
-            //currentLevel++;//Or keep at same level?
+        else {
             OrderQty(currentCategoryName, currentItemName);
         }
     }
 
-
-    public void Level2()
-    {
-
-    }
-
-    public void OrderQty(String category, String item)
-    {
+    /**
+     * Completes the purchase transaction
+     *
+     * @param category
+     * @param item
+     */
+    public void OrderQty(String category, String item) {
+        String nameOfItem = controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME);
+        String quantityOfItem = controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.INVENTORY);
+        Product prod = new Product();
+        prod.setItemCount(Integer.parseInt(quantityOfItem));
+        System.out.println("\n" + nameOfItem + " availability: " + quantityOfItem);
         System.out.println("Please select a quantity");
-        System.out.println(controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME) +
-                " availability:" + controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.INVENTORY));
         System.out.print(":");
         menu m = new menu();
         String result = m.getSelection();
-        System.out.println("You ordered:" + result);
+
+        int selectedQuantity = -1;
+        try {
+            selectedQuantity = Integer.parseInt(result);
+        } catch (Exception e) {
+            selectedQuantity = -1;
+        }
+        if (prod.order(selectedQuantity)) {
+            System.out.println("You ordered: " + result);
+            //controller.writeProduct()
+            controller.addHistoryItem(Integer.parseInt(controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.SKU_CODE)),
+                    Integer.parseInt(result),
+                    controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.NAME),
+                    new BigDecimal(controller.getProductInformation(category, item, Controller.PRODUCT_FIELD.COST)));
+        } else
+
+            System.out.println("Invalid quantity.");
+    }
+
+    public void showHistory() {
+        menu m = new menu();
+
+        List<History> history = controller.getHistoryItems();
+        List<String> historyStrings = new ArrayList<>();
+        for (History temp : history) {
+            historyItem item = new historyItem(temp.getName(), temp.getPrice(), temp.getQuantity(), temp.getSkuCode());
+            historyStrings.add(item.getPrintString());
+        }
+
+        m.loadMenu(historyStrings);
+        m.addMenuItem("'q' to quit");
+        m.printMenu();
+        String result = m.getSelection();
+        try {
+            result = "q";
+        } catch (Exception e) {
+            result = "q";
+        }
+        if (result == "q") {
+            currentLevel=0;
+        }
+
     }
 }

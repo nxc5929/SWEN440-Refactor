@@ -26,18 +26,22 @@ public class Product {
 	private String description;
 	private BigDecimal cost;
 
+	public Product(){
+		itemCount = 0;
+	}
+
 	/**
-	 * Check to see if we have enough of this item for an order
+	 * Check to see if we have enough of this represented item for an order
 	 *
 	 * @param amount Number of items being ordered
 	 * @return true if enough stock
 	 */
 	public boolean canOrder(int amount) {
-		return (itemCount - amount >= 0);
+		return (itemCount - amount >= 0 && amount > 0);
 	}
 
 	/**
-	 * Place an order, decrement the available itemCount
+	 * Place an order, decrement the represented available item count
 	 *
 	 * @param amount being ordered
 	 * @return if order was successfully processed
