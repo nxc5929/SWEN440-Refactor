@@ -51,7 +51,8 @@ and a better final grade.
  - Lombok Library: Lombok annotations are used in places to auto-generate getters and
  setters.  
  - JUnit Library:  Included but never used.
-
+ - sqlite-jdbc: Used to interact with sqlite Database
+ 
 ### Building
 The development team choose Maven as their build tool.  Maven 3.1.0 and 3.3.9
 have both been successfully used.  
@@ -70,9 +71,7 @@ the project have a better sense of the importance of unit testing
 and deliver code with good unit tests and high coverage.  
 
 ## Running the Online Ordering System
-The previous team left no written instructions on how to run the system, other than it appears the main app runs via menutest.
-Management sincerely hopes the new teams understand the importance of good
-documentation and provide this critical piece of information.
+Run the program by navigating to the target folder and entering 'java -jar orderSys-1.0-SNAPSHOT,jar' command
 
 **It should be noted that a large part of the compensation for working on
 this project is dependent on the management team being able to evaluate it.
